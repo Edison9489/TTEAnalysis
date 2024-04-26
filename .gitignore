@@ -9,6 +9,7 @@ __pycache__/
 # user-defined
 .idea**
 **_env
+**checkpoint**
 
 # Distribution / packaging
 .Python
