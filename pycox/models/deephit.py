@@ -41,15 +41,18 @@ class DeepHitSingle(models.pmf.PMFBase):
             loss = models.loss.DeepHitSingleLoss(alpha, sigma)
         super().__init__(net, loss, optimizer, device, duration_index)
 
-    def make_dataloader(self, data, batch_size, shuffle, num_workers=0):
-        dataloader = super().make_dataloader(data, batch_size, shuffle, num_workers,
+    def make_dataloader(self, dataset, batch_size, shuffle, num_workers=0, **kwargs):
+        dataloader = super().make_dataloader(dataset, batch_size, shuffle, num_workers,
                                              make_dataset=models.data.DeepHitDataset)
-        return dataloader
-    
-    def make_dataloader_predict(self, input, batch_size, shuffle=False, num_workers=0):
-        dataloader = super().make_dataloader(input, batch_size, shuffle, num_workers)
+        # DataLoader = torch.utils.data.DataLoader
+        # dataloader = DataLoader(dataset, batch_size, shuffle=shuffle, num_workers=num_workers, **kwargs)
         return dataloader
 
+    def make_dataloader_predict(self, dataset, batch_size, shuffle, num_workers=0, **kwargs):
+        dataloader = super().make_dataloader(dataset, batch_size, shuffle, num_workers)
+        # DataLoader = torch.utils.data.DataLoader
+        # dataloader = DataLoader(dataset, batch_size, shuffle=shuffle, num_workers=num_workers, **kwargs)
+        return dataloader
 
 class DeepHit(tt.Model):
     """DeepHit for competing risks [1].

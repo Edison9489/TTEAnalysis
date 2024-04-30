@@ -128,7 +128,6 @@ def pair_rank_mat(idx_durations, events, dtype='float32'):
     mat = _pair_rank_mat(mat, idx_durations, events, dtype)
     return mat
 
-
 class DeepHitDataset(tt.data.DatasetTuple):
     def __getitem__(self, index):
         input, target =  super().__getitem__(index)
@@ -136,3 +135,6 @@ class DeepHitDataset(tt.data.DatasetTuple):
         rank_mat = pair_rank_mat(*target)
         target = tt.tuplefy(*target, rank_mat).to_tensor()
         return tt.tuplefy(input, target)
+
+
+
