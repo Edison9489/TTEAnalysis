@@ -353,3 +353,25 @@ class EvalSurv:
                                                         self.events, self.surv.values, self.index_surv,
                                                         self.steps)
         return -ibll
+
+    
+    def median_survival_times(self):
+        """ Calculate the median survival times from the survival functions. """
+        def find_median_time(surv_series):
+            below_half = surv_series[surv_series < 0.5]
+            return below_half.index[0] if not below_half.empty else surv_series.index[-1]
+
+        return self.surv.apply(find_median_time, axis=0)
+
+    def compute_error_metrics(self):
+        """ Computes MAE, RMSE, and MAPE for uncensored observations. """
+        predicted_med_times = self.median_survival_times()
+        uncensored_indices = self.events == 1
+        actual_times = self.durations[uncensored_indices]
+        pred_times = predicted_med_times[uncensored_indices]
+
+        mae = np.mean(np.abs(pred_times - actual_times))
+        rmse = np.sqrt(np.mean((pred_times - actual_times) ** 2))
+        mape = np.mean(np.abs((pred_times - actual_times) / actual_times)) * 100 if np.any(actual_times) else float('inf')  # Avoid division by zero
+
+        return mae, rmse, mape
